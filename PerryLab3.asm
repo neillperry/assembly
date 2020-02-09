@@ -1,17 +1,17 @@
 ########## PerryLab3.asm ##########
 
-#         Title:  Lab 3 Convert F to C                 #
+#         Title:  Lab 3 Convert F to Celsius           #
 #         Author: Neill Perry                          #
-#         Date: Feb 11, 2020                            #
+#         Date: Feb 11, 2020                           #
 #         Course & Section: CSC 211 / 301W             #
-#         Description: Convert from Fahrenheit to Celsius   #
+#         Description: Convert Fahrenheit to Celsius   #
 #         Initial Algorithm:  none                     #
 #         Data Requirements:                           #
-#             Input variables: user inputs integers    #
-#             Output variables: series of strings      #
+#             Input variables: user inputs integer     #
+#             Output variables: converted integer      #
 #             Addition Variables:                      #
 #                                                      #
-#         Formulas:                                    #
+#         Formulas:  C = (F - 32) * 5/9                #
 
 ####################################
 

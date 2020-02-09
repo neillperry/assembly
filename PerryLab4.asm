@@ -9,7 +9,7 @@
 #         Initial Algorithm:  none                     #
 #         Data Requirements:                           #
 #             Input variables: user inputs integers    #
-#             Output variables: the sum of the integers     #
+#             Output variables:  sum of the integers   #
 #             Addition Variables:                      #
 #                                                      #
 #         Formulas:  basic addition                    #
@@ -36,7 +36,7 @@ main:
         #Prompt User to Enter SECOND Integer
         la $a0, prompt2        # load beginning address of string into $a0 register
         li $v0,4               # load instruction (li) to print the string loaded into register $v0
-        syscall                # system call to display "Please enter first integer:"
+        syscall                # system call to display "Please enter second integer:"
 
         #Get the SECOND integer from User
         li $v0, 5              # load instruction to read an integer from keyboard

@@ -87,6 +87,8 @@ main:
         # Store the result from $v0 to $t4
         move $t4, $v0
 
+        # Now that we have our five integers, let's move on to the arithmetic
+
         #############################
         ##                         ##
         ##      Calculations       ##
@@ -104,6 +106,8 @@ main:
 
         # subtract the above result from the sum of (a + b)
         sub $t5, $t5, $t6       # this is the result of the entire equation
+
+        # Our computations are complete. Next, we will load it to the console
 
         #############################
         ##                         ##
@@ -203,3 +207,16 @@ main:
          plus:    .asciiz " + "                                # plus sign
          minus:   .asciiz " - "                                # minus sign
          equal:   .asciiz " = "                                # equal sign
+
+         #############################
+         ##                         ##
+         ##     Sample Output       ##
+         ##                         ##
+         #############################
+
+         # Please enter first integer: 45
+         # Please enter second integer: 67
+         # Please enter first integer: 9
+         # Please enter second integer: 2
+         # Please enter second integer: 7
+         # (45 + 67) - (9 + 2) * 7 = 35

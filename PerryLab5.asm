@@ -1,18 +1,19 @@
 ########## PerryLab5.asm ##########
 
-#         Title:  Lab 5 - Sales Tax                #
+#         Title:  Lab 5 - Sales Tax                    #
 #         Author: Neill Perry                          #
-#         Date: Feb 11, 2020                            #
+#         Date: Feb 11, 2020                           #
 #         Course & Section: CSC 211 / 301W             #
-#         Description: (1) ask user for price   #
-#                      (2) display calculated sales tax #
+#         Description: (1) ask user for price          #
+#                      (2) display tax & total cost    #
 #         Initial Algorithm:  none                     #
 #         Data Requirements:                           #
-#             Input variables: user inputs integers    #
-#             Output variables: series of strings      #
+#             Input variables: user inputs integer     #
+#             Output variables: integers               #
 #             Addition Variables:                      #
 #                                                      #
-#         Formulas:                                    #
+#         Formulas:    Item Cost * 0.08 = tax          #
+                      Item Cost * 1.08 = total cost    #
 
 ####################################
 
@@ -52,7 +53,7 @@ main:
         li $v0,4               # load call code to print a string
         syscall                # system call to display "\n"
 
-        # Multiplication - this is where the magic happens THE SEQUEL
+        # Multiplication - this is where the magic happens THE SEQUEL!
         mul.s $f2,$f0,$f8    # user_input * 1.08
 
         #Display Total Cost string
