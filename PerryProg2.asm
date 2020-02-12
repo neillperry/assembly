@@ -5,7 +5,7 @@
 #         Date: Feb 18, 2020                           #
 #         Course & Section: CSC 211 / 301W             #
 #         Description: (1) ask user for three integers #
-#                      (2) display largest integers    #
+#                      (2) display the largest integer #
 #         Initial Algorithm:  none                     #
 #         Data Requirements:                           #
 #             Input variables: user inputs integers    #
@@ -63,26 +63,6 @@ main:
         # Store the result from $v0 to $t2
         move $t2, $v0
 
-
-        #############################
-        ##                         ##
-        ##      Calculations       ##
-        ##                         ##
-        #############################
-
-        blt $t0, $t1, ELSE       # IF t0 < t1 then Branch to ELSE
-        move $a0,$t0             # IF t0 > t1 move t0 -> a0 for display as largest
-        li $v0,1                 # load call code number to display integer into v0
-        syscall                  # system call to print t0 as largest   
-        j ENDIF                  # done with IF so jump over ELSE code to ENDIF label
-
-        ELSE:
-        blt $t1, $t2,
-        move $a0,$t1      # ELSE t1 is largest so move t1 -> a0 for display
-        li $v0,1                 # load call code number to display integer into v0
-        syscall                  # system call to print t1 as largest
-
-
         #############################
         ##                         ##
         ##     Display Output      ##
@@ -94,11 +74,32 @@ main:
         li $v0,4               # load call code to print a string
         syscall                # system call to display "And the largest of the three is: "
 
-        #Display output message - Part 2
-        move $a0, $t0           # load address of first integer into $a0 register
+        #############################
+        ##                         ##
+        ##     IF / ELSE LOGIC     ##
+        ##                         ##
+        #############################
+
+        # This is basically a crude bubble sort using an If / Else statement
+
+        # STEP 1 - Compare first and second integer
+        # Move the larger of the two to $t1 before moving on to ELSE
+        blt $t0, $t1, ELSE       # IF t0 < t1 then Branch to ELSE
+        move $t0,$t1             # t0 is larger so swap out its value for $t1
+        j ELSE                   # done with IF so jump over ELSE code to ENDIF label
+
+        # STEP 2 - Compare second and third integer
+        # Move the larger of the two $t2 before moving on to ENDIF
+        ELSE:
+        blt $t1, $t2, ENDIF      # If t1 < t2 then Branch to ENDIF (t2 is the largest integer)
+        move $t1,$t2             # t1 is larger so swap out its value for $t2
+        j ENDIF                  # done with IF so jump over ELSE1 code to ENDIF label
+
+        # STEP 3 - by now the largest integer should be in the #t2 position
+        ENDIF:
+        move $a0, $t2           # load address of first integer into $a0 register
         li $v0, 1               # load instruction to print an integer (code 1 = integer)
         syscall                 # system call to display first integer
-
 
         # Terminate Program
         li $v0,10            # load call code to End Program
