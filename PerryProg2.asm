@@ -84,15 +84,15 @@ main:
 
         # STEP 1 - Compare first and second integer
         # Move the larger of the two to $t1 before moving on to ELSE
-        blt $t0, $t1, ELSE       # IF t0 < t1 then Branch to ELSE
-        move $t0,$t1             # t0 is larger so swap out its value for $t1
+        blt $t0, $t1, ELSE       # IF t0 < t1 then Branch to ELSE (t1 is the largest integer)
+        move $t1,$t0             # t0 is larger so swap out its value for $t1
         j ELSE                   # done with IF so jump over ELSE code to ENDIF label
 
         # STEP 2 - Compare second and third integer
         # Move the larger of the two $t2 before moving on to ENDIF
         ELSE:
         blt $t1, $t2, ENDIF      # If t1 < t2 then Branch to ENDIF (t2 is the largest integer)
-        move $t1,$t2             # t1 is larger so swap out its value for $t2
+        move $t2,$t1             # t1 is larger so swap out its value for $t2
         j ENDIF                  # done with IF so jump over ELSE1 code to ENDIF label
 
         # STEP 3 - by now the largest integer should be in the #t2 position

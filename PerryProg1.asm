@@ -52,7 +52,7 @@ main:
         move $t1, $v0
 
         # C. Prompt User to Enter THIRD Integer - c
-        la $a0, prompt1       # load beginning address of string into $a0 register
+        la $a0, prompt3       # load beginning address of string into $a0 register
         li $v0,4              # load instruction (li) to print the string loaded into register $v0
         syscall               # system call to display "Please enter third integer:"
 
@@ -64,7 +64,7 @@ main:
         move $t2, $v0
 
         # D. Prompt User to Enter FOURTH Integer - d
-        la $a0, prompt2        # load beginning address of string into $a0 register
+        la $a0, prompt4        # load beginning address of string into $a0 register
         li $v0,4               # load instruction (li) to print the string loaded into register $v0
         syscall                # system call to display "Please enter fourth integer:"
 
@@ -76,7 +76,7 @@ main:
         move $t3, $v0
 
         # E. Prompt User to Enter FIFTH Integer - e
-        la $a0, prompt2        # load beginning address of string into $a0 register
+        la $a0, prompt5        # load beginning address of string into $a0 register
         li $v0,4               # load instruction (li) to print the string loaded into register $v0
         syscall                # system call to display "Please enter fifth integer:"
 
