@@ -66,12 +66,11 @@ main:
         #############################
 
         # STEP 1 - Compare remained to ZERO
-        # Move the larger of the two to $t1 before moving on to ELSE
         beqz $t3, ELSE        # IF remainder == 0 then Branch to ELSE (integer is EVEN)
         la $a0, odd           # load beginning address of string into $a0 register
         li $v0,4              # load instruction (li) to print the string loaded into register $v0
         syscall               # system call to display "Integer is ODD" message
-        j ELSE                # done with IF so jump over ELSE code to ENDIF label
+        j ENDIF               # done with IF so jump over ELSE code to ENDIF label
 
         # STEP 2 - Print the EVEN STATEMENT
         ELSE:
@@ -87,7 +86,6 @@ main:
         syscall               # system call to display "\n"
 
         # STEP 4 - Thank the audience
-        ENDIF:
         la $a0, ted           # load beginning address of string into $a0 register
         li $v0,4              # load instruction (li) to print the string loaded into register $v0
         syscall               # system call to display "\n"
@@ -102,7 +100,7 @@ main:
          odd:    .asciiz "The integer you entered is ODD!"    # Prompt for second integer
          even:   .asciiz "The integer you entered is EVEN!"   # Prompt for third integer
          endl:   .asciiz "\n"                                 # insert new line
-         ted:    .asciiz "Thank you for coming to my TED Talk" # Thank the audience
+         ted:    .asciiz "Thank you for coming to my TED talk"       # Thank the audience
 
          #############################
          ##                         ##
