@@ -80,11 +80,17 @@ main:
         syscall               # system call to display "Integer is EVEN" message
         j ENDIF               # done with IF so jump over ELSE code to ENDIF label
 
-        # STEP 3 - by now the largest integer should be in the #t2 position
+        # STEP 3 - terminate If / else statement by printing blank line
         ENDIF:
         la $a0, endl          # load beginning address of string into $a0 register
         li $v0,4              # load instruction (li) to print the string loaded into register $v0
-        syscall               # system call to display "/n"
+        syscall               # system call to display "\n"
+
+        # STEP 4 - Thank the audience
+        ENDIF:
+        la $a0, ted           # load beginning address of string into $a0 register
+        li $v0,4              # load instruction (li) to print the string loaded into register $v0
+        syscall               # system call to display "\n"
 
         # Terminate Program
         li $v0,10            # load call code to End Program
@@ -95,7 +101,7 @@ main:
          prompt: .asciiz "Please enter the integer: "         # Prompt for test integer
          odd:    .asciiz "The integer you entered is ODD!"    # Prompt for second integer
          even:   .asciiz "The integer you entered is EVEN!"   # Prompt for third integer
-         endl:   .asciiz "/n"                                 # insert new line
+         endl:   .asciiz "\n"                                 # insert new line
          ted:    .asciiz "Thank you for coming to my TED Talk" # Thank the audience
 
          #############################
