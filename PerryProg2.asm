@@ -93,7 +93,7 @@ main:
         ELSE:
         blt $t1, $t2, ENDIF      # If t1 < t2 then Branch to ENDIF (t2 is the largest integer)
         move $t2,$t1             # t1 is larger so swap out its value for $t2
-        j ENDIF                  # done with IF so jump over ELSE1 code to ENDIF label
+        j ENDIF                  # done with IF so jump over ELSE code to ENDIF label
 
         # STEP 3 - by now the largest integer should be in the #t2 position
         ENDIF:
