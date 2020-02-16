@@ -52,7 +52,7 @@ main:
         move $t1, $v0
 
         # C. Prompt User to Enter THIRD Integer - c
-        la $a0, prompt1       # load beginning address of string into $a0 register
+        la $a0, prompt3       # load beginning address of string into $a0 register
         li $v0,4              # load instruction (li) to print the string loaded into register $v0
         syscall               # system call to display "Please enter third integer:"
 
@@ -110,7 +110,7 @@ main:
          prompt1: .asciiz "Please enter first integer: "       # Prompt for first integer
          prompt2: .asciiz "Please enter second integer: "      # Prompt for second integer
          prompt3: .asciiz "Please enter third integer: "       # Prompt for third integer
-         result:  .asciiz "And the largest of the three is: "   # Display largest integer
+         result:  .asciiz "\nAnd the largest of the three is: "   # Display largest integer
 
          #############################
          ##                         ##
@@ -118,6 +118,7 @@ main:
          ##                         ##
          #############################
 
-         # Please enter first integer: 45
-         # Please enter second integer: 67
-         # Please enter first integer: 9
+         # Please enter first integer: 23
+         # Please enter second integer: 22
+         # Please enter third integer: 21
+         # And the largest of the three is: 23

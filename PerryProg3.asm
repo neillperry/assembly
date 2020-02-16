@@ -8,11 +8,11 @@
 #                      (2) determine if odd or even    #
 #         Initial Algorithm:  division                 #
 #         Data Requirements:                           #
-#             Input variables: user inputs integers    #
-#             Output variables: series of strings      #
-#             Addition Variables:                      #
+#             Input variables: user inputs integer     #
+#             Output variables: string "Odd" or "Even" #
+#             Addition Variables: integer 2            #
 #                                                      #
-#         Formulas:                                    #
+#         Formulas:  user integer / 2                  #
 
 ####################################
 
@@ -27,7 +27,7 @@ main:
         ##                         ##
         #############################
 
-        # A. Prompt User to Enter FIRST Integer
+        # A. Prompt User to Enter an Integer
         la $a0, prompt        # load beginning address of string into $a0 register
         li $v0,4              # load instruction (li) to print the string loaded into register $v0
         syscall               # system call to display "Please enter first integer:"
@@ -97,10 +97,10 @@ main:
         #DATA SECTION
 .data
          prompt: .asciiz "Please enter the integer: "         # Prompt for test integer
-         odd:    .asciiz "The integer you entered is ODD!"    # Prompt for second integer
-         even:   .asciiz "The integer you entered is EVEN!"   # Prompt for third integer
+         odd:    .asciiz "\nThe integer you entered is ODD!"    # Prompt for second integer
+         even:   .asciiz "\nThe integer you entered is EVEN!"   # Prompt for third integer
          endl:   .asciiz "\n"                                 # insert new line
-         ted:    .asciiz "Thank you for coming to my TED talk"       # Thank the audience
+         ted:    .asciiz "\nThank you for coming to my TED talk"       # Thank the audience
 
          #############################
          ##                         ##
@@ -108,9 +108,8 @@ main:
          ##                         ##
          #############################
 
-         # Please enter first integer: 45
-         # Please enter second integer: 67
-         # Please enter first integer: 9
-         # Please enter second integer: 2
-         # Please enter second integer: 7
-         # (45 + 67) - (9 + 2) * 7 = 35
+         # Please enter the integer: -13
+
+         # The integer you entered is ODD!
+
+         # Thank you for coming to my TED talk
