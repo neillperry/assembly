@@ -1,6 +1,6 @@
 
 
-########## Hello.asm ##########
+########## PerryLab1.asm ##########
 
 #         Title:  Lab 1 Hello                                #
 #         Author: Neill Perry                                #
