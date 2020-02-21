@@ -13,7 +13,7 @@
 #             Addition Variables:                      #
 #                                                      #
 #         Formulas:    Item Cost * 0.08 = tax          #
-                      Item Cost * 1.08 = total cost    #
+#                      Item Cost * 1.08 = total cost   #
 
 ####################################
 
