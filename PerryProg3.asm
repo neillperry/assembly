@@ -51,8 +51,8 @@ main:
         li $t1, 2     # initialize the divisor
 
         # Divide the integer by TWO
-        div $t0,$t1   # Lo = $t5 / $t6   (Lo will contain the integer quotient)
-                      # Hi = $t5 mod $t6   (Hi will contain the remainder)
+        div $t0,$t1   # Lo = $t0 / $t1   (Lo will contain the integer quotient)
+                      # Hi = $t0 mod $t1   (Hi will contain the remainder)
 
         mfhi $t3      # move quantity in special register Hi to $t3:   $t3 = Hi
                       # we don't care about the quotient (Lo) value
@@ -65,7 +65,7 @@ main:
         ##                         ##
         #############################
 
-        # STEP 1 - Compare remained to ZERO
+        # STEP 1 - Compare remainder to ZERO
         beqz $t3, ELSE        # IF remainder == 0 then Branch to ELSE (integer is EVEN)
         la $a0, odd           # load beginning address of string into $a0 register
         li $v0,4              # load instruction (li) to print the string loaded into register $v0

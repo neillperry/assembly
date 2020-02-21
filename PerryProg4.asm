@@ -44,8 +44,9 @@ main:
         ##                         ##
         #############################
 
-        # Initialize the counter
-        li $t1, 0             # initialize the counter (t1)
+        # Initialize the constants
+        li $t1, 1             # initialize the counter (t1)
+        li $t2, 10            # initialize the divisor (t2)
 
         WHILE:
               bgt $t1, $t0, ENDWHILE   # if integer (t0) is greater than counter (t1), execute a loop
@@ -55,14 +56,32 @@ main:
               li $v0,1                 # load call code to print the integer
               syscall                  # system call to print the integer
 
-              # Add a space
-              la $a0, space            # load beginning address of string into $a0 register
-              li $v0,4                 # load instruction (li) to print the string loaded into register $v0
-              syscall                  # system call to display " "
+              ## NEW LINE EVERY TEN COUNTS
 
-              add $t1, $t1, 1          # increment the counter
+                  # STEP 1 - Divide the counter by TEN
+                  div $t1,$t2   # Lo = $t1 / $t2     (Lo will contain the integer quotient)
+                                # Hi = $t1 mod $t2   (Hi will contain the remainder)
 
-              j WHILE                  # start the loop again
+                  mfhi $t3      # move the remainder in special register Hi to $t3:   $t3 = Hi
+                                # we don't care about the quotient (Lo value)
+
+                  # STEP 2 - If remainder does not equals ZERO, print a " "
+                  beqz $t3, ELSE        # IF remainder != 0 then print a space after number
+                  la $a0, space         # load beginning address of string into $a0 register
+                  li $v0,4              # load instruction (li) to print the string loaded into register $v0
+                  syscall               # system call to display " "
+                  j ENDIF               # done with IF so jump over ELSE code to ENDIF label
+
+                  ELSE:                 # ELSE executes only when counter is divisible by 10
+                  la $a0, endl          # load beginning address of string into $a0 register
+                  li $v0,4              # load instruction (li) to print the string loaded into register $v0
+                  syscall               # system call to start a new line
+                  j ENDIF               # done with ELSE code now move to ENDIF label
+
+                  # STEP 3 - terminate IF statement, augmenting the counter, restart WHILE loop
+                  ENDIF:
+                  add $t1, $t1, 1          # increment the counter
+                  j WHILE                  # start the WHILE loop again
 
 
         ENDWHILE: la $a0, endl        # load beginning address of display message into a0 register
@@ -70,7 +89,7 @@ main:
               syscall                 # system call to start a new line
 
 
-        # We are done counting
+        # We are done counting!!
 
         # Terminate Program
         li $v0,10            # load call code to End Program
