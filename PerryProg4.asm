@@ -5,7 +5,7 @@
 #         Date: Feb 25, 2020                           #
 #         Course & Section: CSC 211 / 301W             #
 #         Description: (1) ask user for one integer    #
-#                      (2) count up to that integer    #
+#                      (2) print up to that integer    #
 #         Initial Algorithm:  While Loop               #
 #         Data Requirements:                           #
 #             Input variables: user inputs integer     #
@@ -27,7 +27,7 @@ main:
         # 1. Prompt User to Enter an Integer
         la $a0, prompt        # load beginning address of string into $a0 register
         li $v0,4              # load instruction (li) to print the string loaded into register $v0
-        syscall               # system call to display "Please enter first integer:"
+        syscall               # system call to display "Please enter an integer greater than 0: "
 
         # 2. Get the INTEGER from User
         li $v0, 5             # load instruction to read an integer from keyboard
@@ -44,7 +44,7 @@ main:
         ##                         ##
         #############################
 
-        # 1. Initialize the constants
+        # 1. Initialize the variables
         li $t1, 1             # initialize the counter (t1)
         li $t2, 10            # initialize the divisor (t2)
 
