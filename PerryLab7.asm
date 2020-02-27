@@ -23,14 +23,13 @@
 main:
         #############################
         ##                         ##
-        ##     Get User Inputs     ##
+        ##   Get 10 User Inputs    ##
         ##                         ##
         #############################
 
         # B. Initialize pointer and counter
-        li $t1, 0             # initialize the counter (t1)
-        li $t2, 10            # initialize divisor (t3) for average calculation
-        li $t3, 0             # initialize the pointer (t3) to 0
+        li $t1, 0             # initialize the counter (t1) to 0
+        li $t2, 0             # initialize the pointer (t2) to 0
 
         WHILE:
           bgt, $t1, 9, ENDWHILE
@@ -44,10 +43,11 @@ main:
           syscall               # system call to read integer and store in $f0
 
           # Store the result from $v0 to array
-          sw $v0, array($t3)
+          sw $v0, array($t2)
 
-          add $t3, $t3, 4          # increment the counter
-          add $t1, $t1, 1          # move pointer one character
+          add $t1, $t1, 1          # increment loop counter by 1
+          add $t2, $t2, 4          # increment the array pointer by 4 (bytes)
+
           j WHILE                  # start the loop again
 
         ENDWHILE:
@@ -63,24 +63,26 @@ main:
         ##                         ##
         #############################
 
+        # Reset my array pointer and counter to zero
+        addi $t1, $zero, 0
+        addi $t2, $zero, 0
+        li $t3, 100             # initialize running sum (t3) to 0
+
         # C. Iterate over the array, adding as you go
-        # WHILE: lb, $t0, ($t2)          # get a byte from the string
-        #       beqz $t0, ENDWHILE       # zero means end of string
-        #      add $t1, $t1, $t2        # increment the counter
-        #      add $t2, 1               # move pointer one character
-        #      j WHILE                  # start the loop again
+        # WHILE2:
+        #       bgt, $t1, 9, ENDWHILE2    # loop over array until counter is greater than 9
+        #       lb, $t0, ($t2)           # get a byte from the string
+
+        #       add $t1, $t1, 1          # increment loop counter by 1
+        #       add $t2, $t2, 4          # increment the array pointer by 4 (bytes)
+
+        #       j WHILE2                  # start the loop again
 
 
-        # ENDWHILE: la $a0, average       # load beginning address of display message into a0 register
-        #      li $v0,4               # load call code to print a string
-        #      syscall                # system call to start a new line
+        #ENDWHILE2: la $a0, sum       # load beginning address of display message into a0 register
+        #           li $v0,4               # load call code to print a string
+        #           syscall                # system call to start a new line
 
-        # D. Calculate the average by dividing sum by 10
-        # div $t1,$t3   # Lo = $t0 / $t3     (Lo will contain the integer quotient)
-                      # Hi = $t0 mod $t3   (Hi will contain the remainder)
-
-        # mflo $t4      # move quantity in special register Lo to $t3
-                      # we don't care about the remainder. It's dead to us.
 
         #############################
         ##                         ##
@@ -89,22 +91,20 @@ main:
         #############################
 
         # D. Display Array Sum
-        la $a0, thing          # load beginning address of display message into a0 register
-        li $v0,4               # load call code to print a string
-        syscall                # system call to display "\nArray Average: "
-
-        # Display final count
-        move $a0, $t1          # move counter from t1 --> a0 register
+        move $a0, $t3          # move counter from t3 --> a0 register
         li $v0,1               # load call code to print the integer
         syscall                # system call to print the integer
 
         # E. Display Array Average
-        la $a0, array          # load beginning address of display message into a0 register
+        la $a0, average        # load beginning address of display message into a0 register
         li $v0,4               # load call code to print a string
-        syscall                # system call to display "\nArray Sum: "
+        syscall                # system call to display "\nArray Average: "
+
+        # D. Calculate the average by dividing sum by 10
+        div $t3, $t3, 10       # divide running total by ten and store that average in t3
 
         # Display average
-        move $a0, $t4          # move average from t3 --> a0 register
+        move $a0, $t3          # move average from t3 --> a0 register
         li $v0,1               # load call code to print the integer
         syscall                # system call to print the integer
 
@@ -116,10 +116,9 @@ main:
 .data
          prompt:      .asciiz  "Enter an integer: "        # Prompt for integers
          sum:         .asciiz  "\nArray Sum: "             # Line showing result
-         average:     .asciiz  "\nArray Average"           # new line
+         average:     .asciiz  "\nArray Average: "           # new line
 
-         array:       .word 3, 0, 1, 2, 6, -2, 4, 7, 3, 7  # 10 element integer array
-         thing:       .space 40                            # every integer needs 4 bytes
+        array:       .word 40                            # every integer needs 4 bytes
 
          #############################
          ##                         ##
