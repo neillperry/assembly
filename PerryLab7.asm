@@ -50,11 +50,9 @@ main:
 
           j WHILE                  # start the loop again
 
-        ENDWHILE:
-          # Initialize pointer and counter and running total
-          li $t1, 0             # initialize the counter (t1)
-          la $t2, array         # initialize the pointer (t2)
-          li $t3, 0             # initialize running sum (t3) to 0
+        ENDWHILE: la $a0, endl       # load beginning address of display message into a0 register
+            li $v0,4               # load call code to print a string
+            syscall                # system call to start a new line
 
         # Now that we have our integer array, let's move on to the averaging!
 
@@ -64,6 +62,10 @@ main:
         ##                         ##
         #############################
 
+        # Initialize pointer and counter and running total
+        li $t1, 0             # initialize the counter (t1)
+        la $t2, array         # initialize the pointer (t2)
+        li $t3, 0             # initialize running sum (t3) to 0
 
         # C. Iterate over the array, adding as you go
         WHILE2:
@@ -87,7 +89,7 @@ main:
                j WHILE2                  # start the loop again
 
 
-        ENDWHILE2: la $a0, sum       # load beginning address of display message into a0 register
+        ENDWHILE2: la $a0, endl       # load beginning address of display message into a0 register
                    li $v0,4               # load call code to print a string
                    syscall                # system call to start a new line
 
@@ -97,11 +99,6 @@ main:
         ##     Display Results     ##
         ##                         ##
         #############################
-
-        # D. Display Array Sum
-        move $a0, $t3          # move counter from t3 --> a0 register
-        li $v0,1               # load call code to print the integer
-        syscall                # system call to print the integer
 
         # E. Display Array Average
         la $a0, average        # load beginning address of display message into a0 register
@@ -123,9 +120,9 @@ main:
         #DATA SECTION
 .data
          prompt:      .asciiz  "Enter an integer: "        # Prompt for integers
-         sum:         .asciiz  "\nArray Sum: "             # Line showing result
          average:     .asciiz  "\nArray Average: "         # Line showing average
-         space:       .asciiz  "  "                        # Line showing average
+         space:       .asciiz  "  "                        # Space to insert b/w numbers
+         endl:        .asciiz  "\n"                        # Start new line
 
 
         array:       .word 40                            # every integer needs 4 bytes
@@ -135,3 +132,18 @@ main:
          ##     Sample Output       ##
          ##                         ##
          #############################
+
+        #  Enter an integer: 12
+        #  Enter an integer: 14
+        #  Enter an integer: 16
+        #  Enter an integer: 18
+        #  Enter an integer: 20
+        #  Enter an integer: 22
+        #  Enter an integer: 24
+        #  Enter an integer: 26
+        #  Enter an integer: 28
+        #  Enter an integer: 30
+
+        #  12  14  16  18  20  22  24  26  28  30
+
+        #  Array Average: 21
