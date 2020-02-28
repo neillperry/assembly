@@ -51,9 +51,10 @@ main:
           j WHILE                  # start the loop again
 
         ENDWHILE:
-              la $a0, average       # load beginning address of display message into a0 register
-              li $v0,4               # load call code to print a string
-              syscall                # system call to start a new line
+          # Initialize pointer and counter and running total
+          li $t1, 0             # initialize the counter (t1)
+          la $t2, array         # initialize the pointer (t2)
+          li $t3, 0             # initialize running sum (t3) to 0
 
         # Now that we have our integer array, let's move on to the averaging!
 
@@ -63,25 +64,32 @@ main:
         ##                         ##
         #############################
 
-        # Reset my array pointer and counter to zero
-        addi $t1, $zero, 0
-        addi $t2, $zero, 0
-        li $t3, 100             # initialize running sum (t3) to 0
 
         # C. Iterate over the array, adding as you go
-        # WHILE2:
-        #       bgt, $t1, 9, ENDWHILE2    # loop over array until counter is greater than 9
-        #       lb, $t0, ($t2)           # get a byte from the string
-
-        #       add $t1, $t1, 1          # increment loop counter by 1
-        #       add $t2, $t2, 4          # increment the array pointer by 4 (bytes)
-
-        #       j WHILE2                  # start the loop again
+        WHILE2:
+               bgt, $t1, 9, ENDWHILE2    # loop over array until counter is greater than 9
+               lb, $t0, ($t2)           # get a byte from the string
 
 
-        #ENDWHILE2: la $a0, sum       # load beginning address of display message into a0 register
-        #           li $v0,4               # load call code to print a string
-        #           syscall                # system call to start a new line
+               move $a0, $t0          # move counter from t3 --> a0 register
+               li $v0,1               # load call code to print the integer
+               syscall                # system call to print the integer
+
+               la $a0, space          # load beginning address of display message into a0 register
+               li $v0,4               # load call code to print a string
+               syscall                # system call to start a new line
+
+               add $t3, $t0, $t3        # add byte to running total
+
+               add $t1, $t1, 1          # increment loop counter by 1
+               add $t2, $t2, 4          # increment the array pointer by 4 (bytes)
+
+               j WHILE2                  # start the loop again
+
+
+        ENDWHILE2: la $a0, sum       # load beginning address of display message into a0 register
+                   li $v0,4               # load call code to print a string
+                   syscall                # system call to start a new line
 
 
         #############################
@@ -116,7 +124,9 @@ main:
 .data
          prompt:      .asciiz  "Enter an integer: "        # Prompt for integers
          sum:         .asciiz  "\nArray Sum: "             # Line showing result
-         average:     .asciiz  "\nArray Average: "           # new line
+         average:     .asciiz  "\nArray Average: "         # Line showing average
+         space:       .asciiz  "  "                        # Line showing average
+
 
         array:       .word 40                            # every integer needs 4 bytes
 
