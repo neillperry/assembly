@@ -92,9 +92,10 @@ main:
       li $t2, 0             # initialize the pointer (t2) to 0
 
       la $t0, array        # t0 = address of array
-      lw $t1, count        # t1 = count, exit loop when it goes to 0
+      lw $t1, $t0          # t1 = user-inputed array size, exit loop when it goes to 0
 
       # set initial values a[0] = min = max
+      # lw means load word, loading a word from array (via t0) to t2 and t3
       lw $t2, ($t0)        # t2 = min = a[0] (initialization)
       lw $t3, ($t0)        # t3 = max = a[0] (initialization)
 
