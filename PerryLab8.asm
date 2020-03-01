@@ -30,7 +30,7 @@ main:
       ##                         ##
       #############################
 
-      # A. Get integer n from User
+      # A. Ask User for an integer
       la $a0, arraysize     # load address of string output into a0
       li $v0,4              # load instruction number to display a string into v0
       syscall               # v0 = 4, indicates display a string
@@ -55,7 +55,7 @@ main:
       ##                         ##
       #############################
 
-      # E. Initialize array pointer
+      # E. Initialize counter and array pointer
       li $t1, 0             # initialize the counter (t1) to 0
       li $t2, 0             # initialize the pointer (t2) to 0
 
