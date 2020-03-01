@@ -70,8 +70,7 @@ main:
         # C. Iterate over the array, adding as you go
         WHILE2:
                bgt, $t1, 9, ENDWHILE2    # loop over array until counter is greater than 9
-               lb, $t0, ($t2)           # get a byte from the string
-
+               lb $t0, ($t2)           # get a byte from the string
 
                move $a0, $t0          # move counter from t3 --> a0 register
                li $v0,1               # load call code to print the integer

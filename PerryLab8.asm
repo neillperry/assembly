@@ -42,7 +42,12 @@ main:
       # C. Store the result from $v0 to $t0
       move $t0, $v0         # t0 will be the counter for the while loop below
 
-      # Per lab instructions, no need to error check user input (assume it is between 1-15)
+      # D. Insert blank line for aesthetics
+      la $a0, endl          # load beginning address of display message into a0 register
+      li $v0,4              # load call code to print a string
+      syscall               # system call to start a new line
+
+      # Per lab instructions, no need to error check user input (assume 1<=input<=15)
 
       #############################
       ##                         ##
@@ -50,34 +55,41 @@ main:
       ##                         ##
       #############################
 
-      # B. Initialize array pointer
+      # E. Initialize array pointer
       li $t1, 0             # initialize the counter (t1) to 0
       li $t2, 0             # initialize the pointer (t2) to 0
 
+      # F. Loop n times to get all the integers for the array
       WHILE:
 
         # 1. WHILE pointer is less than array size n
-        bgt, $t1, $t0, ENDWHILE
+        bge, $t1, $t0, ENDWHILE
 
-        # A. Prompt User to Enter an integer
+        la $a0, endl     # load beginning address of display message into a0 register
+        li $v0,4               # load call code to print a string
+        syscall                # system call to start a new line
+
+        # 2. Prompt User to Enter an integer
         la $a0, prompt        # load address of prompt into a0
         li $v0,4              # load instruction number to display a string into v0
         syscall               # v0 = 4, indicates display a string
 
-        # B. Get the integer from User
+        # 3. Get the integer from User
         li $v0, 5             # load instruction to read an integer from keyboard
         syscall               # system call to read integer and store in $f0
 
-        # C. Store the result from $v0 to array and increment pointer and counter
+        # 4. Store the result from $v0 to array and increment pointer and counter
         sw $v0, array($t2)
-        add $t1, $t1, 1          # increment loop counter by 1
-        add $t2, $t2, 4          # increment the array pointer by 4 (bytes)
+        add $t1, $t1, 1       # increment loop counter by 1
+        add $t2, $t2, 4       # increment the array pointer by 4 (bytes)
 
-        j WHILE                  # start the loop again
+        j WHILE             # start the loop again
 
-      ENDWHILE: la $a0, endl     # load beginning address of display message into a0 register
-          li $v0,4               # load call code to print a string
-          syscall                # system call to start a new line
+      # G. Insert blank line for aesthetics
+      ENDWHILE:
+        la $a0, endl        # load beginning address of display message into a0 register
+        li $v0,4            # load call code to print a string
+        syscall             # system call to start a new line
 
       # Now that we have our integer array, let's find min and max!!
 
@@ -87,45 +99,49 @@ main:
       ##                         ##
       #############################
 
-      # Reset array pointer and counter
-      li $t1, 0             # initialize the counter (t1) to 0
-      li $t2, 0             # initialize the pointer (t2) to 0
+      # H. Reset array pointer and counter
+      li $t1, 0            # initialize the counter (t1) to 0
+      la $t2, array        # t2 = address of array
 
-      la $t0, array        # t0 = address of array
-      lw $t1, $t0          # t1 = user-inputed array size, exit loop when it goes to 0
-
-      # set initial values a[0] = min = max
+      # I. Initialize values
+      # set initial values min = max = array[0]
       # lw means load word, loading a word from array (via t0) to t2 and t3
-      lw $t2, ($t0)        # t2 = min = a[0] (initialization)
-      lw $t3, ($t0)        # t3 = max = a[0] (initialization)
+      # lb means load byte, loading a byte from array
+      lw $t3, ($t2)        # t3 = min = a[0] (initialization)
+      lw $t4, ($t2)        # t4 = max = a[0] (initialization)
 
-      # increment the pointer and counter to next element
-      add $t0, $t0, 4       # move pointer ahead to next array element a[1]
-      add $t1, $t1, -1      # decrement counter to keep in step with array
+      # J. Iterate over the array, adding as you go
+      WHILE2:
+             bge, $t1, $t0, ENDWHILE2    # loop over array until counter is greater than user set array size
+             lw $t5, ($t2)              # get a byte from the array
 
-loop:  lw $t4,($t0)       # t4 = next element in array
+             # 1. PRINT ARRAY ELEMENT
+             move $a0, $t5          # move counter from t6 --> a0 register
+             li $v0,1               # load call code to print the integer
+             syscall                # system call to print the integer
 
-      # Display Array Element (t4)
-      move $a0, $t4          # move counter from t3 --> a0 register
-      li $v0,1               # load call code to print the integer
-      syscall                # system call to print the integer
+             la $a0, space          # load beginning address of display message into a0 register
+             li $v0,4               # load call code to print a string
+             syscall                # system call to start a new line
 
-      # Add a space after each Array Element
-      la $a0, space          # load beginning address of display message into a0 register
-      li $v0,4               # load call code to print a string
-      syscall                # system call to start a new line
+             # 2. CHECK MIN / MAX VALUES
+             bge $t5, $t3, notMin   # if array element >= current Min (t3) goto notMin
+                 move $t3, $t5      # otherwise set a new min value = a[i]
+                 j notMax
 
-      # IF statement
-      bge $t4,$t2,notMin      # if array element is >= min goto notMin
-          move $t2, $t4       # otherwise set a new min value = a[i]
-          j notMax
+               notMin: ble $t5,$t4,notMax  # if array element <= current Max (t4) goto notMax
+                 move $t4, $t5               # otherwise set a new min value = a[i]
 
-          notMin: ble $t4,$t3,notMax  # if array element is <= max goto notMax
-            move $t3,$t4               # otherwise set a new max value = a[i]
+               notMax:
+                 add $t1, $t1, 1          # increment loop counter by 1
+                 add $t2, $t2, 4          # increment the array pointer by 4 (bytes)
+                 j WHILE2                  # start the loop again
 
-          notMax: add $t1,$t1,-1      # t1 -- -> counter --
-            add $t0,$t0,4         # increment counter to point to next word
-            bnez $t1,loop         # if $t1 (counter) != 0, then restart another loop
+      # K. Insert blank line for aesthetics
+      ENDWHILE2:
+              la $a0, endl       # load beginning address of display message into a0 register
+              li $v0,4               # load call code to print a string
+              syscall                # system call to start a new line
 
       #############################
       ##                         ##
@@ -133,19 +149,26 @@ loop:  lw $t4,($t0)       # t4 = next element in array
       ##                         ##
       #############################
 
-      la $a0,min          # Display "The minimum number is "
+      # L. Display minimum number
+      la $a0, min         # Display "The minimum number is "
       li $v0,4            # a0 = address of message
       syscall             # v0 = 4 which indicates display a string
 
-      move $a0,$t2        # Display the minimum number
+      move $a0,$t3        # Display the minimum number
       li $v0,1
       syscall
 
-      la $a0,max          # Display "The maximum number is "
+      # M. Empty line for you know why
+      la $a0, endl        # hint: aesthetics
+      li $v0,4            # load call code to print a string
+      syscall             # system call to start a new line
+
+      la $a0, max         # Display "The maximum number is "
       li $v0,4            # a0 = address of message
       syscall             # v0 = 4 which indicates display a string
 
-      move $a0,$t3        # Display the maximum number
+      # N. The REAL program is the friends we made along the way
+      move $a0,$t4        # Display the maximum number
       li $v0,1
       syscall
 
@@ -161,17 +184,33 @@ loop:  lw $t4,($t0)       # t4 = next element in array
       endl:        .asciiz  "\n"                          # Start new line
 
 
-      array:       .word 80                               # every integer needs 4 bytes
+      array:       .word 60                               # every integer needs 4 bytes
 
 
-################ Output #################
+      #############################
+      ##                         ##
+      ##     Sample Output       ##
+      ##                         ##
+      #############################
 
-#                                       #
+      # How big is your array? 7
 
-# The minum number is 2                 #
+      # Enter an integer: 3
 
-# The maximum is 26                     #
+      # Enter an integer: 2
 
-#                                       #
+      # Enter an integer: 6
 
-#########################################
+      # Enter an integer: 4
+
+      # Enter an integer: 5
+
+      # Enter an integer: 7
+
+      # Enter an integer: 1
+
+      # 3  2  6  4  5  7  1
+
+      # The minimum number is 1
+
+      # The maximum number is 7
