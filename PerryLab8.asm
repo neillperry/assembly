@@ -113,7 +113,7 @@ main:
       # J. Iterate over the array, adding as you go
       WHILE2:
              bge, $t1, $t0, ENDWHILE2    # loop over array until counter is greater than user set array size
-             lw $t5, ($t2)              # get a byte from the array
+             lw $t5, ($t2)               # get a byte from the array
 
              # 1. PRINT ARRAY ELEMENT
              move $a0, $t5          # move counter from t6 --> a0 register

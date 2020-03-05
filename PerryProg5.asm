@@ -4,12 +4,14 @@
 #         Author: Neill Perry                          #
 #         Date: Mar 10, 2020                           #
 #         Course & Section: CSC 211 / 301W             #
-#         Description: (1) ask user for one integer    #
-#                      (2) print up to that integer    #
+#         Description: (1) ask user for a string       #
+#                      (2) count total characters      #
+#                      (3) count total vowels          #
+#                      (4) print both counts           #
 #         Initial Algorithm:  While Loop               #
 #         Data Requirements:                           #
-#             Input variables: user inputs integer     #
-#             Output variables: series of integers     #
+#             Input variables: user inputs a string    #
+#             Output variables: two integers           #
 #                                                      #
 #         Formulas:  none                              #
 
@@ -20,7 +22,8 @@
 main:
 #############################
 ##                         ##
-##     Get User Input      ##
+##   Get a String from     ##
+##        the User         ##
 ##                         ##
 #############################
 
@@ -38,24 +41,50 @@ syscall
 
 #############################
 ##                         ##
-##     The Counting        ##
+##     The Counting x2     ##
 ##                         ##
 #############################
 
-# Initialize pointer and counter
-la $t2, string        # initalize the pointer (t2)
-li $t1, 0             # initialize the counter (t1)
+# per lab requirements, need to count both total characters and number of vowels
+# do not count the Enter the user inputs after the string
+
+# Initialize pointer and counter(total) and counter(vowels)
+li $t1, 0             # initialize the total counter (t1)
+la $t2, string        # initialize the pointer (t2)
+li $t3, 0             # vowel counter
 
 WHILE: lb, $t0, ($t2)          # get a byte from the string
       beqz $t0, ENDWHILE       # zero means end of string
+
+      # Display result string
+      la $a0, space           # load beginning address of display message into a0 register
+      li $v0,4                # load call code to print a string
+      syscall                 # system call to display " "
+
+      # Display final count
+      lbu $a0, ($t2)          # move string from t2 --> a0 register
+      li $v0,11               # load call code to print the character
+      syscall                # system call to print the integer
+
       add $t1, $t1, 1          # increment the counter
       add $t2, 1               # move pointer one character
       j WHILE                  # start the loop again
 
 
-ENDWHILE: la $a0, endl        # load beginning address of display message into a0 register
+ENDWHILE: la $a0, endl       # load beginning address of display message into a0 register
       li $v0,4               # load call code to print a string
       syscall                # system call to start a new line
+
+add $t1, $t1, -1             # "take back one kadam to honor the Hebrew God whose Ark this is"
+
+#############################
+##                         ##
+##  The Counting: Part II  ##
+##                         ##
+#############################
+
+
+
 
 #############################
 ##                         ##
@@ -65,11 +94,21 @@ ENDWHILE: la $a0, endl        # load beginning address of display message into a
 
 # Display result string
 la $a0, result           # load beginning address of display message into a0 register
-li $v0,4               # load call code to print a string
-syscall                # system call to display "String length is: "
+li $v0,4                 # load call code to print a string
+syscall                  # system call to display "String length is: "
 
 # Display final count
 move $a0, $t1          # move counter from t1 --> a0 register
+li $v0,1               # load call code to print the integer
+syscall                # system call to print the integer
+
+# Display results of vowel count
+la $a0, vowels           # load beginning address of display message into a0 register
+li $v0,4                 # load call code to print a string
+syscall                  # system call to display "String length is: "
+
+# Display final count
+move $a0, $t3          # move counter from t1 --> a0 register
 li $v0,1               # load call code to print the integer
 syscall                # system call to print the integer
 
@@ -79,9 +118,12 @@ syscall              # system call to end program
 
 #DATA SECTION
 .data
- prompt:      .asciiz  "Please enter the string to be counted: "        # Prompt for string
- result:      .asciiz  "String length is: "                             # Display count length
- endl:        .asciiz  "\n"                                             # Test variable
+ prompt:      .asciiz  "\nPlease enter the string to be counted: "      # Prompt for string
+ result:      .asciiz  "\nString length is: "                           # Display count length
+ vowels:      .asciiz  "\nNumber of vowels in string is: "              # Display number of vowels counted
+ endl:        .asciiz  "\n"                                             # new line
+ test:        .asciiz  "a"                                              # test things
+ space:       .asciiz  "  "                                             # space to insert b/w numbers
  string:      .space 82                                                 # User input
 
  #############################

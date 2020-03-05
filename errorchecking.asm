@@ -88,3 +88,30 @@ main:
 
 
           array:       .word 80                            # every integer needs 4 bytes
+
+
+          add $t3, $t1, 0     # total string length
+          la $t2, string      # initialize the pointer (t2)
+          li $t4, 0           # vowel counter
+
+          WHILE2: lb, $t0, ($t2)          # get a byte from the string
+                beqz $t3, exit       # zero means end of string
+
+                # Display result string
+                la $a0, space           # load beginning address of display message into a0 register
+                li $v0,4                # load call code to print a string
+                syscall                 # system call to display " "
+
+                # Display final count
+                lbu $a0, ($t2)          # move string from t2 --> a0 register
+                li $v0,11               # load call code to print the character
+                syscall                # system call to print the integer
+
+                add $t3, $t3, -1          # increment the counter
+                add $t2, 1               # move pointer one character
+                j WHILE2                  # start the loop again
+
+
+            la $a0, endl       # load beginning address of display message into a0 register
+            li $v0,4               # load call code to print a string
+            syscall                # system call to start a new line
