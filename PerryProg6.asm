@@ -61,20 +61,21 @@ main:
         # 1. WHILE pointer is less than array size n
         bge, $t1, $t0, ENDWHILE
 
+        # 2. Insert a new line for aesthetics
         la $a0, endl     # load beginning address of display message into a0 register
         li $v0,4               # load call code to print a string
         syscall                # system call to start a new line
 
-        # 2. Prompt User to Enter an integer
+        # 3. Prompt User to Enter an integer
         la $a0, prompt        # load address of prompt into a0
         li $v0,4              # load instruction number to display a string into v0
         syscall               # v0 = 4, indicates display a string
 
-        # 3. Get the integer from User
+        # 4. Get the integer from User
         li $v0, 5             # load instruction to read an integer from keyboard
         syscall               # system call to read integer and store in $f0
 
-        # 4. Store the result from $v0 to array and increment pointer and counter
+        # 5. Store the result from $v0 to array and increment pointer and counter
         sw $v0, array($t2)
         add $t1, $t1, 1       # increment loop counter by 1
         add $t2, $t2, 4       # increment the array pointer by 4 (bytes)
@@ -96,67 +97,45 @@ main:
       #############################
 
       # H. Reset array pointer and counter
-      li $t1, 0            # initialize the OUTER counter (t1) to 0
-      la $t2, array        # t2 = address of array
-      move $t7, $t0
+      li $t1, 0            # initialize the OUTER counter (t1) to index of 0
+      la $t2, array        # t2 = address of array[0]
 
-      # J. OUTER LOOP - i
+      # I. OUTER LOOP - i
       WHILE2:                            # For i=0, i < Array Size (t0)
              bge, $t1, $t0, ENDWHILE2    # loop over array until OUTER counter is greater than array size
 
-             li $t3, 0                   # Initialize the INNER loop counter to ZERO
-             add $t4, $t2, 4             # Initialize memory location of j to i+1
+             # Initialize the inner loop values
+             li $t3, 1             # initialize the INNER counter to index of 1
+             add $t4, $t2, 4       # SET (or RESET) the j memory pointer to that of array[1]
 
-             # INNER LOOP - j
+             # INNER LOOP - start every inner loop at second array element
              WHILE3:
-                bge, $t3, $t0, ENDWHILE3   # go until INNER gets to the diminuishing counter
+                bge, $t3, $t0, ENDWHILE3   # go until INNER gets to the end of the array
+                                           # with each iteration, INNER goes over a smaller and smaller portion of array
+                                           # but each iteration will always start at beginning of array
 
-                # ALWAYS START AT THE BEGINNING OF THE ARRAY
-
-                # 1. Store array[j] and array[j-1] into temporary variables
-                lw $t5, ($t4)               # store the actual value of array[j] at t5
+                # 1. Load array[j] and array[j-1] into temporary variables
+                lw $t6, ($t4)               # store the actual value of array[j] at t6
                 sub $t4, $t4, 4             # subtract 4 to the j array pointer to get memory address of j-1
-                lw $t6, ($t4)               # store the actual value of array[j-1] at t6
-
-
-                # 1. Print an Array Element
-                move $a0, $t5          # move counter from t6 --> a0 register
-                li $v0,1               # load call code to print the integer
-                syscall                # system call to print the integer
-
-                # 2. Print a Space
-                la $a0, space          # load beginning address of display message into a0 register
-                li $v0,4               # load call code to print a string
-                syscall                # system call to insert a space
-
-                # 1. Print an Array Element
-                move $a0, $t6          # move counter from t6 --> a0 register
-                li $v0,1               # load call code to print the integer
-                syscall                # system call to print the integer
-
-                # 2. Print a Space
-                la $a0, endl          # load beginning address of display message into a0 register
-                li $v0,4               # load call code to print a string
-                syscall                # system call to insert a space
-
+                lw $t5, ($t4)               # store the actual value of array[j-1] at t5
 
                 # 2. MAGIC HAPPENS HERE!!!
-                bge, $t5, $t6, noSwap   # if array[j] > array[j-1] then no swap
-                sw $t5, ($t4)           # SWAP - store array[j] temp value at location for j-1
-                add $t4, $t4, 4         # INCREMENT memory by 4 to get to j
-                sw $t6, ($t4)           # STORE array[j-1] temp value at location for j
-                sub $t4, $t4, 4         # INCREMENT memory by 4 to get back to where we were
+                bge, $t6, $t5, noSwap   # if array[j] > array[j-1] then no swap b/c those two are in ASC order already
+                                        # OTHERWISE -->
+                sw $t6, ($t4)           # WRITE array[j] temp value to array at location for j-1
+                add $t4, $t4, 4         # INCREMENT memory pointer by 4 to get to j
+                sw $t5, ($t4)           # WRITE array[j-1] temp value to array at location for j
+                sub $t4, $t4, 4         # SUBTRACT memory by 4 to get back to where we were before this detour
 
-                 # 6. Increment the INNER counter and the INNER array pointer
+                 # 6. Increment the INNER counter and the memory pointer
                  noSwap:
                  add $t3, $t3, 1             # increment the INNER counter by 1
-                 add $t4, $t4, 8             # increment the INNER memory counter by 4
+                 add $t4, $t4, 8             # increment the INNER memory counter by 8 to get to j+1
                  j WHILE3
 
              ENDWHILE3:
-               add $t1, $t1, 1        # increment OUTER loop counter by 1
-               add $t2, $t2, 4        # increment the OUTER array pointer by 4 (bytes)
-               j WHILE2               # start the OUTER loop again
+              add $t1, $t1, 1        # increment OUTER loop counter by 1
+              j WHILE2               # start the OUTER loop again
 
       # K. Insert blank line for aesthetics
       ENDWHILE2:
@@ -174,7 +153,7 @@ main:
       li $t1, 0            # initialize the counter (t1) to 0
       la $t2, array        # t2 = address of array
 
-      # I. Iterate over the array, adding as you go
+      # I. Iterate over the array, printing as you go
       WHILE4:
              bge, $t1, $t0, ENDWHILE4    # loop over array until counter is greater than user set array size
              lw $t5, ($t2)               # get a byte from the array
@@ -203,8 +182,6 @@ main:
       prompt:      .asciiz  "Enter an integer: "          # Prompt for integers
       space:       .asciiz  "  "                          # Space to insert b/w numbers
       endl:        .asciiz  "\n"                          # Start new line
-      ugly:        .asciiz  "ugly"                          # Start new line
-
 
       array:       .word 60                               # every integer needs 4 bytes
 
@@ -215,20 +192,36 @@ main:
       ##                         ##
       #############################
 
-      # How big is your array? 7
+      # How big is your array? 14
 
-      # Enter an integer: 3
 
-      # Enter an integer: 2
+      # Enter an integer: 46
 
-      # Enter an integer: 6
+      # Enter an integer: 23
 
-      # Enter an integer: 4
+      # Enter an integer: 0
 
-      # Enter an integer: 5
+      # Enter an integer: 17
 
-      # Enter an integer: 7
+      # Enter an integer: -12
 
-      # Enter an integer: 1
+      # Enter an integer: -13
 
-      # 3  2  6  4  5  7  1
+      # Enter an integer: 35
+
+      # Enter an integer: 13
+
+      # Enter an integer: -5
+
+      # Enter an integer: 8
+
+      # Enter an integer: 29
+
+      # Enter an integer: 11
+
+      # Enter an integer: -11
+
+      # Enter an integer: 26
+
+
+      # -13  -12  -11  -5  0  8  11  13  17  23  26  29  35  46

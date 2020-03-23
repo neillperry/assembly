@@ -20,6 +20,7 @@
 .text
 .globl main
 main:
+
 #############################
 ##                         ##
 ##   Get a String from     ##
@@ -54,55 +55,56 @@ li $t1,0             # t1 = array index
 li $t2,0             # t2 = total character counter
 li $t3,0             # t3 = vowel counter
 
-# D. The Ugliest Loop You Will See - check each character against {A, E, I, O, U, a, e, i, o, u}
+# D. The Ugliest Loop You Will Ever See - check each character against {A, E, I, O, U, a, e, i, o, u}
 loop:   lb $t0,string($t1)   # fetch next character
         beqz $t0,endLoop     # if its a null character, exit loop
-        lb $t4,char1         # t4 = character to be searched for
-        bne $t0,$t4,nxt_e    # if != search character goto con
+
+        lb $t4,char_a         # t4 = character to be searched for
+        bne $t0,$t4,nxt_e    # if != search character goto next vowel
         add $t3,$t3,1        # if yes - add 1 to vowel counter
         j con
 
-nxt_e:  lb $t4,char2         # t4 = character to be searched for
-        bne $t0,$t4,nxt_i    # if != search character goto con
+nxt_e:  lb $t4,char_e         # t4 = character to be searched for
+        bne $t0,$t4,nxt_i    # if != search character goto next vowel
         add $t3,$t3,1        # if yes - add 1 to vowel counter
         j con
 
-nxt_i:  lb $t4,char3         # t4 = character to be searched for
-        bne $t0,$t4,nxt_o      # if != search character goto con
+nxt_i:  lb $t4,char_i         # t4 = character to be searched for
+        bne $t0,$t4,nxt_o      # if != search character goto next vowel
         add $t3,$t3,1        # if yes - add 1 to vowel counter
         j con
 
-nxt_o:  lb $t4,char4         # t4 = character to be searched for
-        bne $t0,$t4,nxt_u      # if != search character goto con
+nxt_o:  lb $t4,char_o         # t4 = character to be searched for
+        bne $t0,$t4,nxt_u      # if != search character goto next vowel
         add $t3,$t3,1        # if yes - add 1 to vowel counter
         j con
 
-nxt_u:  lb $t4,char5         # t4 = character to be searched for
-        bne $t0,$t4,nxt_A    # if != search character goto con
+nxt_u:  lb $t4,char_u         # t4 = character to be searched for
+        bne $t0,$t4,nxt_A    # if != search character goto next vowel
         add $t3,$t3,1        # if yes - add 1 to vowel counter
         j con
 
-nxt_A:  lb $t4,char6         # t4 = character to be searched for
-        bne $t0,$t4,nxt_E    # if != search character goto con
+nxt_A:  lb $t4,char_A         # t4 = character to be searched for
+        bne $t0,$t4,nxt_E    # if != search character goto next vowel
         add $t3,$t3,1        # if yes - add 1 to vowel counter
         j con
 
-nxt_E:  lb $t4,char7         # t4 = character to be searched for
-        bne $t0,$t4,nxt_I    # if != search character goto con
+nxt_E:  lb $t4,char_E         # t4 = character to be searched for
+        bne $t0,$t4,nxt_I    # if != search character goto next vowel
         add $t3,$t3,1        # if yes - add 1 to vowel counter
         j con
 
-nxt_I:  lb $t4,char8         # t4 = character to be searched for
-        bne $t0,$t4,nxt_O    # if != search character goto con
+nxt_I:  lb $t4,char_I         # t4 = character to be searched for
+        bne $t0,$t4,nxt_O    # if != search character goto next vowel
         add $t3,$t3,1        # if yes - add 1 to vowel counter
         j con
 
-nxt_O:  lb $t4,char9         # t4 = character to be searched for
-        bne $t0,$t4,nxt_U    # if != search character goto con
+nxt_O:  lb $t4,char_O         # t4 = character to be searched for
+        bne $t0,$t4,nxt_U    # if != search character goto next vowel
         add $t3,$t3,1        # if yes - add 1 to vowel counter
         j con
 
-nxt_U:  lb $t4,char10        # t4 = character to be searched for
+nxt_U:  lb $t4,char_U        # t4 = character to be searched for
         bne $t0,$t4,con      # if != search character goto con
         add $t3,$t3,1        # if yes - add 1 to vowel counter
         j con
@@ -145,7 +147,7 @@ move $a0, $t3          # move counter from t3 --> a0 register
 li $v0,1               # load call code to print the integer
 syscall                # system call to print the integer
 
-# Terminate Program
+# K. Terminate Program
 li $v0,10            # load call code to End Program
 syscall              # system call to end program
 
@@ -162,16 +164,18 @@ syscall              # system call to end program
  vowels:      .asciiz  "\nNumber of vowels: "                           # Display number of vowels counted
  endl:        .asciiz  "\n"                                             # new line
 
- char1:       .asciiz  "a"                                              # test things
- char2:       .asciiz  "e"                                              # test things
- char3:       .asciiz  "i"                                              # test things
- char4:       .asciiz  "o"                                              # test things
- char5:       .asciiz  "u"                                              # test things
- char6:       .asciiz  "A"                                              # test things
- char7:       .asciiz  "E"                                              # test things
- char8:       .asciiz  "I"                                              # test things
- char9:       .asciiz  "O"                                              # test things
- char10:       .asciiz "U"                                              # test things
+ char_a:       .asciiz  "a"                                              # test things
+ char_e:       .asciiz  "e"                                              # test things
+ char_i:       .asciiz  "i"                                              # test things
+ char_o:       .asciiz  "o"                                              # test things
+ char_u:       .asciiz  "u"                                              # test things
+
+ char_A:       .asciiz  "A"                                              # test things
+ char_E:       .asciiz  "E"                                              # test things
+ char_I:       .asciiz  "I"                                              # test things
+ char_O:       .asciiz  "O"                                              # test things
+ char_U:       .asciiz  "U"                                              # test things
+
  string:      .space 82                                                 # User input
 
  #############################
